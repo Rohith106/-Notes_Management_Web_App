@@ -17,7 +17,8 @@ const HomePage = () => {
       try {
         const res = await api.get("/notes");
         console.log(res.data);
-        setNotes(res.data);
+  // Map _id to id for each note
+  setNotes(res.data.map(note => ({ ...note, id: note._id })));
         setIsRateLimited(false);
       } catch (error) {
         console.log("Error fetching notes");

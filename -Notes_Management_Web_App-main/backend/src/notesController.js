@@ -1,3 +1,5 @@
+
+import mongoose from "mongoose";
 import { getAllNotes as getAllNotesModel, getNoteById as getNoteByIdModel, createNote as createNoteModel, updateNote as updateNoteModel, deleteNote as deleteNoteModel } from "./notesModel.js";
 
 export async function getAllNotes(req, res) {
@@ -47,8 +49,12 @@ export async function updateNote(req, res) {
 }
 
 export async function deleteNote(req, res) {
+    const { id } = req.params;
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ Message: "Invalid or missing note ID" });
+    }
     try {
-        const deleted = await deleteNoteModel(req.params.id);
+        const deleted = await deleteNoteModel(id);
         if (!deleted) {
             return res.status(404).json({ Message: "Note not found" });
         }

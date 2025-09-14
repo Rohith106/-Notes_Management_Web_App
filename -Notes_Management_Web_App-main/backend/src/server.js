@@ -3,7 +3,7 @@ import cors from "cors"
 import dotenv from "dotenv";
 
 import noteRoutes from "./notesRoutes.js";
-import mysql from "mysql2/promise";
+import mongoose from "mongoose";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
@@ -12,19 +12,14 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// MySQL connection function
+
+// MongoDB connection function
 const connectDB = async () => {
     try {
-        const connection = await mysql.createConnection({
-            host: process.env.MYSQL_HOST,
-            user: process.env.MYSQL_USER,
-            password: process.env.MYSQL_PASSWORD,
-            database: process.env.MYSQL_DATABASE
-        });
-        console.log("MySQL Connected Successfully");
-        return connection;
+        await mongoose.connect(process.env.MONGO_URI);
+        console.log("MongoDB Connected Successfully");
     } catch (error) {
-        console.error("Error connecting to MySQL", error);
+        console.error("Error connecting to MongoDB", error);
         process.exit(1);
     }
 };
